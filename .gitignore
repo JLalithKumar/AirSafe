@@ -1,39 +1,42 @@
-# Dependencies
-node_modules/
 
-# Environment variables and secrets
+node_modules/
 .env
 .env.*
 !.env.example
 
-# Build output
 dist/
 build/
+coverage/
 
-# Logs
 *.log
 logs/
 
-# Operating system files
 .DS_Store
 Thumbs.db
 desktop.ini
 
-# IDE settings
 .vscode/
 .idea/
 
-# Test coverage
-coverage/
-
-# Temporary files
 tmp/
 temp/
 
-# Terraform state and local files
-.terraform/
+**/.terraform/
 *.tfstate
 *.tfstate.*
 *.tfvars
+*.tfvars.json
+*.auto.tfvars
+*.auto.tfvars.json
+*.tfplan
+*.plan
 crash.log
 crash.*.log
+.terraformrc
+terraform.rc
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+terraform/ec2-console.json
