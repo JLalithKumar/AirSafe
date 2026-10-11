@@ -1,9 +1,16 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from 'react-router-dom';
+
 import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider } from './context/AuthContext';
 import { AirQualityProvider } from './context/AirQualityContext';
 import { SimulationProvider } from './context/SimulationContext';
+
 import Navbar from './components/common/Navbar';
 import Footer from './components/common/Footer';
 
@@ -30,7 +37,12 @@ export default function App() {
       <AuthProvider>
         <SimulationProvider>
           <AirQualityProvider>
-            <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+            <Router
+              future={{
+                v7_startTransition: true,
+                v7_relativeSplatPath: true,
+              }}
+            >
               <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 flex flex-col selection:bg-teal-500 selection:text-white transition-colors duration-200 relative">
                 <Navbar />
 
@@ -48,6 +60,7 @@ export default function App() {
                         </GuestRoute>
                       }
                     />
+
                     <Route
                       path="/login"
                       element={
@@ -66,6 +79,7 @@ export default function App() {
                         </ProtectedRoute>
                       }
                     />
+
                     <Route
                       path="/exposure"
                       element={
@@ -74,6 +88,7 @@ export default function App() {
                         </ProtectedRoute>
                       }
                     />
+
                     <Route
                       path="/forecast"
                       element={
@@ -82,6 +97,7 @@ export default function App() {
                         </ProtectedRoute>
                       }
                     />
+
                     <Route
                       path="/routes"
                       element={
@@ -90,6 +106,7 @@ export default function App() {
                         </ProtectedRoute>
                       }
                     />
+
                     <Route
                       path="/history"
                       element={
@@ -98,6 +115,7 @@ export default function App() {
                         </ProtectedRoute>
                       }
                     />
+
                     <Route
                       path="/school"
                       element={
