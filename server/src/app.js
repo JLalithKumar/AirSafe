@@ -22,29 +22,36 @@
 
 const express = require('express');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const config = require('./config/env');
 
 const healthRouter = require('./routes/health.routes');
+const authRouter = require('./routes/auth.routes');
 const airRouter = require('./routes/air.routes');
 const exposureRouter = require('./routes/exposure.routes');
 const recommendationRouter = require('./routes/recommendation.routes');
 const geoRouter = require('./routes/geo.routes');
+const routeRouter = require('./routes/route.routes');
 const { notFound, errorHandler } = require('./middleware/errorHandler');
 
 const app = express();
 
 // ── Middleware ─────────────────────────────────────────────────────────────
 
-// CORS: Allow requests from the configured frontend origin.
+// CORS: Allow requests from the configured frontend origin with credentials.
 // In development this is http://localhost:5173 (Vite default).
 // In production it will be the deployed frontend domain.
 app.use(
   cors({
     origin: config.corsOrigin,
+    credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   })
 );
+
+// Parse incoming request cookies
+app.use(cookieParser());
 
 // Parse incoming request bodies as JSON.
 // Requests with Content-Type: application/json are automatically parsed.
@@ -55,10 +62,12 @@ app.use(express.json());
 
 // All API routes are prefixed with /api.
 app.use('/api/health', healthRouter);
+app.use('/api/auth', authRouter);
 app.use('/api/air', airRouter);
 app.use('/api/exposure', exposureRouter);
 app.use('/api/recommendations', recommendationRouter);
 app.use('/api/geo', geoRouter);
+app.use('/api/routes', routeRouter);
 
 // ── Error handlers (must be mounted last) ──────────────────────────────────
 

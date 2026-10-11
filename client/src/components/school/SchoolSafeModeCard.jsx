@@ -45,74 +45,78 @@ export default function SchoolSafeModeCard() {
 
   return (
     <Card className="p-6 sm:p-8 space-y-6">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-teal-500/15 text-teal-400 flex items-center justify-center border border-teal-500/25">
+          <div className="w-10 h-10 rounded-xl bg-teal-500/10 dark:bg-teal-500/15 text-teal-600 dark:text-teal-400 flex items-center justify-center border border-teal-500/20 dark:border-teal-500/25">
             <School className="w-5 h-5" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="text-base font-bold text-slate-100">{schoolStatus.schoolName}</h3>
+              <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">{schoolStatus.schoolName}</h3>
               <Badge variant={isBadAir ? 'danger' : 'good'}>
                 {schoolStatus.statusLevel}
               </Badge>
             </div>
-            <p className="text-xs text-slate-400">Automated student safety guidelines based on today's air quality</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400">Automated student safety guidelines based on today's air quality</p>
           </div>
         </div>
 
         <div className="text-right">
-          <span className="text-xs text-slate-400">Campus Station AQI</span>
-          <div className="text-2xl font-bold text-rose-400 font-sans">{currentAqi}</div>
+          <span className="text-xs text-slate-500 dark:text-slate-400">Campus Station AQI</span>
+          <div className="text-2xl font-bold text-rose-600 dark:text-rose-400 font-sans">{currentAqi}</div>
         </div>
       </div>
 
       {/* Directives */}
       <div className="space-y-3">
-        <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+        <h4 className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
           Campus Activity Guidelines
         </h4>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
           {directives.map((dir, idx) => (
             <div
               key={idx}
-              className={`p-4 rounded-xl border flex items-start gap-3.5 ${
+              className={`p-4 rounded-xl border flex items-start gap-3.5 transition-all ${
                 dir.allowed
-                  ? 'bg-emerald-950/15 border-emerald-500/20'
-                  : 'bg-rose-950/15 border-rose-500/20'
+                  ? 'bg-emerald-50/70 border-emerald-200 dark:bg-emerald-950/15 dark:border-emerald-500/20 hover:border-emerald-300 dark:hover:border-emerald-500/30'
+                  : 'bg-rose-50/70 border-rose-200 dark:bg-rose-950/15 dark:border-rose-500/20 hover:border-rose-300 dark:hover:border-rose-500/30'
               }`}
             >
               <div
-                className={`p-1.5 rounded-lg mt-0.5 ${
-                  dir.allowed ? 'text-emerald-400' : 'text-rose-400'
+                className={`p-1.5 rounded-lg mt-0.5 shrink-0 ${
+                  dir.allowed
+                    ? 'text-emerald-700 bg-emerald-100/70 dark:text-emerald-400 dark:bg-transparent'
+                    : 'text-rose-700 bg-rose-100/70 dark:text-rose-400 dark:bg-transparent'
                 }`}
               >
                 {dir.allowed ? <CheckCircle2 className="w-4 h-4" /> : <XCircle className="w-4 h-4" />}
               </div>
 
-              <div>
-                <div className="flex items-center gap-2">
-                  <h5 className="text-xs font-bold text-slate-200">{dir.title}</h5>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h5 className="text-xs font-bold text-slate-900 dark:text-slate-200">{dir.title}</h5>
                   <span
-                    className={`text-[10px] font-semibold uppercase px-1.5 py-0.5 rounded ${
-                      dir.allowed ? 'bg-emerald-500/10 text-emerald-300' : 'bg-rose-500/10 text-rose-300'
+                    className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded border tracking-wider ${
+                      dir.allowed
+                        ? 'bg-emerald-100 text-emerald-800 border-emerald-300/80 dark:bg-emerald-500/10 dark:text-emerald-300 dark:border-emerald-500/20'
+                        : 'bg-rose-100 text-rose-800 border-rose-300/80 dark:bg-rose-500/10 dark:text-rose-300 dark:border-rose-500/20'
                     }`}
                   >
                     {dir.allowed ? 'Allowed' : 'Restricted'}
                   </span>
                 </div>
-                <p className="text-xs text-slate-300 mt-1 leading-relaxed">{dir.detail}</p>
+                <p className="text-xs text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">{dir.detail}</p>
               </div>
             </div>
           ))}
         </div>
       </div>
 
-      <div className="pt-3 border-t border-slate-800 text-xs text-slate-400 flex items-center justify-between">
+      <div className="pt-3 border-t border-slate-200 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400 flex items-center justify-between">
         <span className="flex items-center gap-1.5">
-          <Building2 className="w-4 h-4 text-teal-400" /> Compliant with National School Air Safety Standards
+          <Building2 className="w-4 h-4 text-teal-600 dark:text-teal-400" /> Compliant with National School Air Safety Standards
         </span>
-        <span className="text-[11px] text-teal-400 font-medium">Auto-updated</span>
+        <span className="text-[11px] text-teal-600 dark:text-teal-400 font-medium">Auto-updated</span>
       </div>
     </Card>
   );

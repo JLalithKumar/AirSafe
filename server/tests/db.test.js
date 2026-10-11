@@ -50,7 +50,10 @@ describe('Database Connection Service (src/config/db.js)', () => {
 
       expect(connectSpy).toHaveBeenCalledWith(
         config.mongodbUri,
-        expect.objectContaining({ serverSelectionTimeoutMS: 5000 })
+        expect.objectContaining({
+          serverSelectionTimeoutMS: 5000,
+          dbName: 'airsafe',
+        })
       );
       expect(conn).toBe(mongoose.connection);
 

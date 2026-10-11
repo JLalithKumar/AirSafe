@@ -21,6 +21,7 @@ const config = require('./env');
  */
 const MONGOOSE_OPTIONS = {
   serverSelectionTimeoutMS: 5000,
+  dbName: config.dbName || 'airsafe',
 };
 
 let listenersAttached = false;
@@ -64,7 +65,7 @@ async function connectDB(uri = config.mongodbUri) {
   connectionPromise = (async () => {
     try {
       await mongoose.connect(uri, MONGOOSE_OPTIONS);
-      console.log('[db] MongoDB connected successfully.');
+      console.log(`[db] MongoDB connected successfully to database: "${mongoose.connection.name}".`);
       return mongoose.connection;
     } catch (err) {
       console.error('[db] Failed to connect to MongoDB:', err.message);

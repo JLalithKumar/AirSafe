@@ -136,16 +136,6 @@ export const routeService = {
       throw new Error('Both origin and destination must have valid resolved coordinates.');
     }
 
-    // Try backend endpoint if live mode
-    if (!USE_MOCK_DATA) {
-      try {
-        const response = await apiClient.post('/routes/compare', payload);
-        return { data: response.data, isMock: false };
-      } catch (err) {
-        console.warn('Backend /api/routes/compare unavailable, generating verified corridors.', err.message);
-      }
-    }
-
     // Check if selecting default demo locations
     const isCoimbatoreDemo =
       Math.abs(originCoords.latitude - 11.0168) < 0.05 &&
@@ -156,6 +146,16 @@ export const routeService = {
     if (isCoimbatoreDemo) {
       await new Promise((resolve) => setTimeout(resolve, 250));
       return { data: MOCK_ROUTES, isMock: true, isDemo: true };
+    }
+
+    // Try backend endpoint if live mode
+    if (!USE_MOCK_DATA) {
+      try {
+        const response = await apiClient.post('/routes/compare', payload);
+        return { data: response.data, isMock: false };
+      } catch (err) {
+        console.warn('Backend /api/routes/compare unavailable, generating verified corridors.', err.message);
+      }
     }
 
     // Generate corridors for arbitrary user-selected coordinates

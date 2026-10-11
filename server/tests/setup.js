@@ -34,4 +34,7 @@ process.env.MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/
 // Tests mock external fetch calls and must NOT make real network requests.
 process.env.OPENWEATHER_API_KEY =
   process.env.OPENWEATHER_API_KEY || 'mock-openweather-key-for-tests';
+// Mock Google OAuth Client ID to satisfy tests without real credentials.
+process.env.GOOGLE_CLIENT_ID =
+  process.env.GOOGLE_CLIENT_ID || 'mock-google-client-id-for-tests.apps.googleusercontent.com';
 
