@@ -1,12 +1,4 @@
 'use strict';
-
-/**
- * tests/route.test.js
- *
- * Integration tests for POST /api/routes/compare.
- * Uses Supertest and offline mocked native fetch for OpenWeather API calls.
- */
-
 const request = require('supertest');
 const app = require('../src/app');
 
@@ -48,6 +40,7 @@ describe('Route Comparison API (POST /api/routes/compare)', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     process.env.NODE_ENV = 'test';
+
     // Default mock fetch to return valid air quality payload
     global.fetch = jest.fn().mockResolvedValue({
       ok: true,
@@ -95,7 +88,9 @@ describe('Route Comparison API (POST /api/routes/compare)', () => {
 
       expect(res.status).toBe(400);
       expect(res.body).toHaveProperty('status', 'error');
-      expect(res.body.message).toMatch(/both 'latitude' and 'longitude' are required/i);
+      expect(res.body.message).toMatch(
+        /both 'latitude' and 'longitude' are required/i
+      );
     });
 
     it('returns 400 when origin latitude is out of bounds (> 90)', async () => {
@@ -167,7 +162,6 @@ describe('Route Comparison API (POST /api/routes/compare)', () => {
       expect(greenRoute).toBeDefined();
       expect(directRoute).toBeDefined();
 
-      // Check required route properties
       const requiredProps = [
         'id',
         'name',
@@ -189,16 +183,15 @@ describe('Route Comparison API (POST /api/routes/compare)', () => {
         expect(directRoute).toHaveProperty(prop);
       }
 
-      // Check route styling and simulation type
       expect(greenRoute.color).toBe('#10b981');
       expect(directRoute.color).toBe('#ef4444');
       expect(greenRoute.routeType).toBe('simulated_corridor');
       expect(directRoute.routeType).toBe('simulated_corridor');
 
-      // Check exposure score comparison: green corridor must have lower exposure than direct route
-      expect(greenRoute.estimatedExposureScore).toBeLessThan(directRoute.estimatedExposureScore);
+      expect(greenRoute.estimatedExposureScore).toBeLessThan(
+        directRoute.estimatedExposureScore
+      );
 
-      // Verify coordinate waypoints start at origin and end at destination
       const coords = greenRoute.coordinates;
       expect(Array.isArray(coords)).toBe(true);
       expect(coords.length).toBeGreaterThanOrEqual(2);
@@ -207,7 +200,6 @@ describe('Route Comparison API (POST /api/routes/compare)', () => {
       expect(coords[coords.length - 1][0]).toBeCloseTo(11.042, 4);
       expect(coords[coords.length - 1][1]).toBeCloseTo(76.98, 4);
 
-      // Verify disclaimer explicitly indicates simulated comparison corridor
       expect(greenRoute.disclaimer).toMatch(/simulated/i);
       expect(directRoute.disclaimer).toMatch(/simulated/i);
     });

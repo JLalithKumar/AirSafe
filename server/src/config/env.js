@@ -79,7 +79,10 @@ const config = Object.freeze({
   nodeEnv: process.env.NODE_ENV,
   corsOrigin: process.env.CORS_ORIGIN,
   mongodbUri: process.env.MONGODB_URI,
+  dbName: process.env.MONGODB_DB_NAME || 'airsafe',
   openWeatherApiKey: process.env.OPENWEATHER_API_KEY,
+  googleClientId: process.env.GOOGLE_CLIENT_ID || null,
+  sessionSecret: process.env.SESSION_SECRET || 'airsafe-default-session-secret-change-in-prod',
 });
 
 module.exports = config;

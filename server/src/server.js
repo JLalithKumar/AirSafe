@@ -19,6 +19,7 @@
 const app = require('./app');
 const config = require('./config/env');
 const db = require('./config/db');
+const mongoose = require('mongoose');
 
 const SHUTDOWN_TIMEOUT_MS = 10000;
 
@@ -84,6 +85,7 @@ async function startServer() {
       console.log(
         `[server] AirSafe API running in ${config.nodeEnv} mode on port ${config.port}`
       );
+      console.log(`[server] Active database: "${mongoose.connection.name}"`);
       console.log(`[server] Health check: http://localhost:${config.port}/api/health`);
     });
 

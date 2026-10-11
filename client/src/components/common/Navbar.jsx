@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   Wind, 
   Activity, 
@@ -13,16 +13,22 @@ import {
   X,
   Bell,
   Sun,
-  Moon
+  Moon,
+  LogOut,
+  User as UserIcon,
+  ShieldCheck
 } from 'lucide-react';
 import { useSimulation } from '../../context/SimulationContext';
 import { useAirQuality } from '../../context/AirQualityContext';
 import { useTheme } from '../../context/ThemeContext';
+import { useAuth } from '../../context/AuthContext';
 import SimulationControlModal from '../simulation/SimulationControlModal';
 import LocationSelectorModal from './LocationSelectorModal';
 
 export default function Navbar() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, isAuthenticated, logout } = useAuth();
   const { toggleTheme, isDark } = useTheme();
   const { isSimulated, activeAlert, dismissAlert } = useSimulation();
   const { selectedLocation, availableLocations, setSelectedLocation, detectUserLocation } = useAirQuality();
@@ -40,6 +46,11 @@ export default function Navbar() {
   ];
 
   const isActive = (path) => location.pathname === path;
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/');
+  };
 
   return (
     <>
@@ -97,14 +108,14 @@ export default function Navbar() {
               })}
             </nav>
 
-            {/* Right Controls: Location Dropdown + Theme Toggle + Demo Mode */}
+            {/* Right Controls: Location Dropdown + Theme Toggle + Demo Mode + Auth */}
             <div className="hidden sm:flex items-center gap-2 shrink-0">
               {/* Location Selector */}
               <div className="flex items-center bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-2 py-1.5 text-xs text-slate-700 dark:text-slate-300">
                 <button
                   type="button"
                   onClick={() => setLocationModalOpen(true)}
-                  className="flex items-center gap-1.5 hover:text-teal-600 dark:hover:text-teal-400 font-semibold max-w-[140px] md:max-w-[180px] truncate"
+                  className="flex items-center gap-1.5 hover:text-teal-600 dark:hover:text-teal-400 font-semibold max-w-[130px] md:max-w-[160px] truncate"
                   title="Search or change location"
                 >
                   <MapPin className="w-3.5 h-3.5 text-teal-600 dark:text-teal-400 shrink-0" />
@@ -146,6 +157,51 @@ export default function Navbar() {
                 <SlidersHorizontal className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
                 <span>{isSimulated ? 'Sim Active' : 'Demo Mode'}</span>
               </button>
+
+              {/* Authentication Controls */}
+              {isAuthenticated ? (
+                <div className="flex items-center gap-1.5 pl-1 border-l border-slate-200 dark:border-slate-800">
+                  <div className="flex items-center gap-2 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-2.5 py-1 text-xs">
+                    {user?.picture ? (
+                      <img
+                        src={user.picture}
+                        alt={user.name || 'User'}
+                        className="w-5 h-5 rounded-full object-cover shrink-0"
+                      />
+                    ) : (
+                      <div className="w-5 h-5 rounded-full bg-teal-500/20 text-teal-700 dark:text-teal-300 font-bold flex items-center justify-center text-[10px] shrink-0">
+                        {user?.name?.charAt(0) || 'U'}
+                      </div>
+                    )}
+                    <span className="font-semibold text-slate-800 dark:text-slate-200 max-w-[80px] md:max-w-[110px] truncate">
+                      {user?.name?.split(' ')[0] || 'Member'}
+                    </span>
+                  </div>
+                  <button
+                    onClick={handleLogout}
+                    title="Sign out of AirSafe"
+                    className="p-2 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 transition-colors"
+                    aria-label="Sign out"
+                  >
+                    <LogOut className="w-4 h-4" />
+                  </button>
+                </div>
+              ) : (
+                <div className="flex items-center gap-1.5 pl-1 border-l border-slate-200 dark:border-slate-800">
+                  <Link
+                    to="/login"
+                    className="px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 hover:text-teal-600 dark:hover:text-teal-400 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors whitespace-nowrap"
+                  >
+                    Sign In
+                  </Link>
+                  <Link
+                    to="/signup"
+                    className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-teal-600 text-white hover:bg-teal-500 shadow-sm transition-colors whitespace-nowrap"
+                  >
+                    Get Started
+                  </Link>
+                </div>
+              )}
             </div>
 
             {/* Mobile Actions */}
@@ -176,6 +232,52 @@ export default function Navbar() {
         {/* Mobile Navigation Drawer */}
         {mobileMenuOpen && (
           <div className="lg:hidden bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 px-4 pt-3 pb-6 space-y-2">
+            {/* Mobile Auth Status */}
+            {isAuthenticated ? (
+              <div className="p-2.5 mb-2 flex items-center justify-between bg-teal-500/10 dark:bg-teal-500/15 rounded-xl border border-teal-500/20">
+                <div className="flex items-center gap-2 truncate">
+                  {user?.picture ? (
+                    <img src={user.picture} alt="" className="w-6 h-6 rounded-full object-cover shrink-0" />
+                  ) : (
+                    <div className="w-6 h-6 rounded-full bg-teal-500 text-white font-bold flex items-center justify-center text-xs shrink-0">
+                      {user?.name?.charAt(0) || 'U'}
+                    </div>
+                  )}
+                  <div className="truncate">
+                    <p className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">{user?.name}</p>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">{user?.email}</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => {
+                    handleLogout();
+                    setMobileMenuOpen(false);
+                  }}
+                  className="flex items-center gap-1 text-xs font-semibold text-rose-600 dark:text-rose-400 px-2.5 py-1 rounded-lg bg-rose-50 dark:bg-rose-950/60 shrink-0"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                  <span>Exit</span>
+                </button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 gap-2 mb-2">
+                <Link
+                  to="/login"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center justify-center py-2 px-3 rounded-xl border border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-900"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  to="/signup"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center justify-center py-2 px-3 rounded-xl bg-teal-600 text-white text-xs font-semibold hover:bg-teal-500"
+                >
+                  Get Started
+                </Link>
+              </div>
+            )}
+
             <div className="p-2 mb-2 flex items-center justify-between bg-slate-100 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800">
               <button
                 type="button"

@@ -50,6 +50,7 @@ async function calculateExposure(req, res, next) {
     // Persist the record if database is connected (best-effort; non-fatal on failure)
     if (mongoose.connection.readyState === 1) {
       try {
+        console.log(`[exposure.controller] Persisting exposure record to database: "${ExposureRecord.db.name}", collection: "${ExposureRecord.collection.name}".`);
         await ExposureRecord.create({
           activity:      result.activity.id,
           activityLabel: result.activity.label,
